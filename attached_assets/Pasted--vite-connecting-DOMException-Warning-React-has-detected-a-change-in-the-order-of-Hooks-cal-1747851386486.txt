@@ -1,0 +1,32 @@
+[vite] connecting...
+DOMException {}
+
+Warning: React has detected a change in the order of Hooks called by TestCaseDetails. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://reactjs.org/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+1. useContext                 useContext
+2. useState                   useState
+3. useEffect                  useEffect
+4. useContext                 useContext
+5. useContext                 useContext
+6. useContext                 useContext
+7. useContext                 useContext
+8. useEffect                  useEffect
+9. useState                   useState
+10. useCallback               useCallback
+11. useSyncExternalStore      useSyncExternalStore
+12. useEffect                 useEffect
+13. undefined                 useContext
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    at TestCaseDetails (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/src/pages/test-case-details.tsx?v=0nDt8f9lLrtsB4hfNuI2A:29:18)
+    at Suspense
+    at Route (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=d657f529:323:16)
+    at Switch (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=d657f529:379:17)
+    at main
+    at div
+    at Layout (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/src/main.tsx?v=0nDt8f9lLrtsB4hfNuI2A:1017:19)
+    at QueryClientProvider (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=d657f529:2805:3)
+    at Router (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=d657f529:291:17)
+    at App (https://7ee8e3cf-065d-41e6-8fea-4e0157837b10-00-336nvjt7udi0v.worf.replit.dev/src/main.tsx?v=0nDt8f9lLrtsB4hfNuI2A:1038:45)
