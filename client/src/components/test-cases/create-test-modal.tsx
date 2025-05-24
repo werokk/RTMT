@@ -39,18 +39,28 @@ interface CreateTestModalProps {
   initialFolder?: number;
 }
 
+interface FolderItem {
+  id: number; // Assuming id is a number based on parseInt usage
+  name: string;
+}
+
+interface UserItem {
+  id: number; // Assuming id is a number
+  full_name: string;
+}
+
 export function CreateTestModal({ isOpen, onClose, initialFolder }: CreateTestModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   // Get users for assignee dropdown
-  const { data: users } = useQuery({
+  const { data: users, isLoading: usersLoading, isError: usersError } = useQuery<UserItem[]>({
     queryKey: ['/api/users'],
     enabled: isOpen
   });
   
   // Get folders for folder dropdown
-  const { data: folders } = useQuery({
+  const { data: folders, isLoading: foldersLoading, isError: foldersError } = useQuery<FolderItem[]>({
     queryKey: ['/api/folders'],
     enabled: isOpen
   });
@@ -174,7 +184,9 @@ export function CreateTestModal({ isOpen, onClose, initialFolder }: CreateTestMo
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {folders?.map((folder: any) => (
+                        {foldersLoading && <SelectItem value="loading_folders" disabled>Loading folders...</SelectItem>}
+                        {foldersError && <SelectItem value="error_folders" disabled>Error loading folders</SelectItem>}
+                        {folders && folders.map((folder) => (
                           <SelectItem key={folder.id} value={folder.id.toString()}>
                             {folder.name}
                           </SelectItem>
@@ -252,7 +264,9 @@ export function CreateTestModal({ isOpen, onClose, initialFolder }: CreateTestMo
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {users?.map((user: any) => (
+                        {usersLoading && <SelectItem value="loading_users" disabled>Loading users...</SelectItem>}
+                        {usersError && <SelectItem value="error_users" disabled>Error loading users</SelectItem>}
+                        {users && users.map((user) => (
                           <SelectItem key={user.id} value={user.id.toString()}>
                             {user.full_name}
                           </SelectItem>

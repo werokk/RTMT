@@ -11,7 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
@@ -167,10 +167,9 @@ export function UserTable({ users, onEdit, onResetPassword }: UserTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge 
-                      variant={user.is_active ? "success" : "destructive"}
-                      className={user.is_active 
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
+                    <Badge
+                      className={user.is_active
+                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                         : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                       }
                     >
@@ -178,7 +177,7 @@ export function UserTable({ users, onEdit, onResetPassword }: UserTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-neutral-400 dark:text-neutral-500">
-                    {formatDate(user.last_login)}
+                    {formatDate(user.last_login ?? null)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-2">

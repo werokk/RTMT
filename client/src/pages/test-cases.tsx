@@ -15,6 +15,35 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { ClipboardCheckIcon, Trash2 } from 'lucide-react';
 
+interface TestCaseStep {
+  step_number: number;
+  description: string;
+  expected_result?: string;
+}
+
+interface TestCaseItem {
+  id: number;
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  type: string;
+  assigned_to?: number;
+  expected_result?: string;
+  steps?: TestCaseStep[];
+  folderId?: number;
+}
+
+interface FolderItem {
+  id: number;
+  name: string;
+}
+
+interface UserItem {
+  id: number;
+  full_name: string;
+}
+
 export default function TestCases() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
@@ -26,17 +55,17 @@ export default function TestCases() {
   const queryClient = useQueryClient();
 
   // Fetch test cases
-  const { data: testCases, isLoading: testCasesLoading } = useQuery({
+  const { data: testCases, isLoading: testCasesLoading } = useQuery<TestCaseItem[]>({
     queryKey: ['/api/testcases', { status: filterStatus !== 'all' ? filterStatus : undefined, folderId: filterFolder !== 'all' ? parseInt(filterFolder) : undefined }],
   });
 
   // Fetch folders
-  const { data: folders, isLoading: foldersLoading } = useQuery({
+  const { data: folders, isLoading: foldersLoading, isError: foldersError } = useQuery<FolderItem[]>({
     queryKey: ['/api/folders'],
   });
 
   // Fetch users for assignee information
-  const { data: users } = useQuery({
+  const { data: users } = useQuery<UserItem[]>({
     queryKey: ['/api/users'],
   });
 
@@ -44,9 +73,9 @@ export default function TestCases() {
   const handleExport = () => {
     if (!testCases || testCases.length === 0) return;
 
-    const testCasesToExport = testCases.map((testCase: any) => {
-      const assigneeName = users?.find((user: any) => user.id === testCase.assigned_to)?.full_name;
-      const folderName = testCase.folderId ? folders?.find((folder: any) => folder.id === testCase.folderId)?.name : undefined;
+    const testCasesToExport = testCases.map((testCase) => {
+      const assigneeName = users?.find((user) => user.id === testCase.assigned_to)?.full_name;
+      const folderName = testCase.folderId ? folders?.find((folder) => folder.id === testCase.folderId)?.name : undefined;
 
       return {
         title: testCase.title,
@@ -56,7 +85,10 @@ export default function TestCases() {
         type: testCase.type,
         assigned_to: assigneeName,
         expected_result: testCase.expected_result,
-        steps: testCase.steps || [],
+        steps: testCase.steps ? testCase.steps.map((step, index) => ({
+          ...step,
+          step_number: index + 1,
+        })) : [],
         folder: folderName
       };
     });
@@ -202,7 +234,9 @@ export default function TestCases() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Folders</SelectItem>
-                    {folders?.map((folder: any) => (
+                    {foldersLoading && <SelectItem value="loading_folders" disabled>Loading folders...</SelectItem>}
+                    {foldersError && <SelectItem value="error_folders" disabled>Error loading folders</SelectItem>}
+                    {folders && folders.map((folder) => (
                       <SelectItem key={folder.id} value={folder.id.toString()}>
                         {folder.name}
                       </SelectItem>
@@ -220,7 +254,7 @@ export default function TestCases() {
               </div>
             ) : testCases && testCases.length > 0 ? (
               <div>
-                {testCases.map((testCase: any) => (
+                {testCases.map((testCase) => (
                   <TestCaseRow
                     key={testCase.id}
                     testCase={testCase}

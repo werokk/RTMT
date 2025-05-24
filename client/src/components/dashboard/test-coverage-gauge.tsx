@@ -72,14 +72,14 @@ export function TestCoverageGauge({ value, target, loading = false }: TestCovera
       <CardContent className="h-[300px]">
         <div className="flex flex-col items-center justify-center h-full">
           <ResponsiveContainer width="100%" height={200}>
-            <RadialBarChart 
-              cx="50%" 
-              cy="50%" 
-              innerRadius="60%" 
-              outerRadius="100%" 
-              barSize={10} 
-              data={data} 
-              startAngle={90} 
+            <RadialBarChart
+              cx="50%"
+              cy="50%"
+              innerRadius="60%"
+              outerRadius="100%"
+              barSize={10}
+              data={data}
+              startAngle={90}
               endAngle={-270}
             >
               <PolarAngleAxis
@@ -90,7 +90,6 @@ export function TestCoverageGauge({ value, target, loading = false }: TestCovera
               />
               <RadialBar
                 background
-                clockWise
                 dataKey="value"
                 cornerRadius={10}
                 fill={color}

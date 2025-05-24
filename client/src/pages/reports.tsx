@@ -10,23 +10,32 @@ import { useQuery } from '@tanstack/react-query';
 import { formatPercentage, formatDuration } from '@/lib/utils';
 import { useLocation } from 'wouter';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { TestRun } from '@/components/reports/test-run-table'; // Import TestRun
+
+interface TestRunReportStats {
+  passRate?: number;
+  avgDuration?: number;
+  totalRuns?: number;
+}
 
 export default function Reports() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [, navigate] = useLocation();
   
   // Fetch test runs
-  const { data: testRuns, isLoading: runsLoading } = useQuery({
+  const { data: testRuns, isLoading: runsLoading } = useQuery<TestRun[]>({
     queryKey: ['/api/runs'],
   });
   
   // Fetch test status statistics
+  // Assuming testStatusStats is not directly used in this file's errors,
+  // but if it were, it would need a type too.
   const { data: testStatusStats, isLoading: statsLoading } = useQuery({
     queryKey: ['/api/stats/test-status'],
   });
   
   // Fetch test run statistics
-  const { data: testRunStats, isLoading: runStatsLoading } = useQuery({
+  const { data: testRunStats, isLoading: runStatsLoading } = useQuery<TestRunReportStats>({
     queryKey: ['/api/stats/test-runs'],
   });
   

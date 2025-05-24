@@ -193,7 +193,7 @@ export function TestCaseTable({ testCases, onEdit, onView }: TestCaseTableProps)
 >{testCase.assigneeName || '-'}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm text-neutral-400 dark:text-neutral-500">{formatDate(testCase.last_run)}</div>
+                    <div className="text-sm text-neutral-400 dark:text-neutral-500">{formatDate(testCase.last_run ?? null)}</div>
                   </TableCell>
                   <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center justify-end space-x-2">

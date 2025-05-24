@@ -40,17 +40,42 @@ interface TestCaseFormProps {
   onSaved?: () => void;
 }
 
+interface UserItem {
+  id: number;
+  full_name: string;
+}
+
+interface StepItem {
+  description: string;
+  expected_result?: string;
+}
+
+interface TestCaseDetails {
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  type: string;
+  assigned_to?: number | null;
+  expected_result?: string;
+}
+
+interface TestCaseData {
+  testCase: TestCaseDetails;
+  steps: StepItem[];
+}
+
 export function TestCaseForm({ test_case_id, onSaved }: TestCaseFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   // Get users for assignee dropdown
-  const { data: users } = useQuery({
+  const { data: users, isLoading: usersLoading, isError: usersError } = useQuery<UserItem[]>({
     queryKey: ['/api/users'],
   });
   
   // Get test case details if editing
-  const { data: testCaseData, isLoading } = useQuery({
+  const { data: testCaseData, isLoading } = useQuery<TestCaseData>({
     queryKey: ['/api/testcases', test_case_id],
     enabled: !!test_case_id,
   });
@@ -84,7 +109,7 @@ export function TestCaseForm({ test_case_id, onSaved }: TestCaseFormProps) {
         type: testCase.type,
         assigned_to: testCase.assigned_to || null,
         expected_result: testCase.expected_result || '',
-        steps: steps.length > 0 ? steps.map(step => ({
+        steps: testCaseData.steps && testCaseData.steps.length > 0 ? testCaseData.steps.map((step: StepItem) => ({
           description: step.description,
           expected_result: step.expected_result || ''
         })) : [{ description: '', expected_result: '' }]
@@ -284,7 +309,9 @@ export function TestCaseForm({ test_case_id, onSaved }: TestCaseFormProps) {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="">None</SelectItem>
-                        {users?.map((user: any) => (
+                        {usersLoading && <SelectItem value="loading_users" disabled>Loading users...</SelectItem>}
+                        {usersError && <SelectItem value="error_users" disabled>Error loading users</SelectItem>}
+                        {users && users.map((user) => (
                           <SelectItem key={user.id} value={user.id.toString()}>
                             {user.full_name}
                           </SelectItem>

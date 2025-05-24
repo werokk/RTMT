@@ -20,12 +20,18 @@ interface SidebarProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
+interface FolderItem {
+  id: string; // Assuming id is a string, adjust if it's a number
+  name: string;
+  testCount: number;
+}
+
 export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const [location] = useLocation();
   const [expandedFolder, setExpandedFolder] = useState<string | null>(null);
   
   // Query to fetch folders
-  const { data: folders, isLoading: foldersLoading } = useQuery({
+  const { data: folders, isLoading: foldersLoading } = useQuery<FolderItem[]>({
     queryKey: ['/api/folders'],
     enabled: true,
   });

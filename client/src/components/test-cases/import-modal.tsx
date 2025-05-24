@@ -15,6 +15,11 @@ interface ImportModalProps {
   onClose: () => void;
 }
 
+interface FolderItem {
+  id: number; // Assuming id is a number based on usage with parseInt elsewhere
+  name: string;
+}
+
 export function ImportModal({ isOpen, onClose }: ImportModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -26,7 +31,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
   const [isUploading, setIsUploading] = useState(false);
   
   // Get folders for dropdown
-  const { data: folders } = useQuery({
+  const { data: folders, isLoading: foldersLoading, isError: foldersError } = useQuery<FolderItem[]>({
     queryKey: ['/api/folders'],
     enabled: isOpen
   });
@@ -181,7 +186,9 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">None</SelectItem>
-                {folders?.map((folder: any) => (
+                {foldersLoading && <SelectItem value="loading_folders" disabled>Loading folders...</SelectItem>}
+                {foldersError && <SelectItem value="error_folders" disabled>Error loading folders</SelectItem>}
+                {folders && folders.map((folder) => (
                   <SelectItem key={folder.id} value={folder.id.toString()}>
                     {folder.name}
                   </SelectItem>

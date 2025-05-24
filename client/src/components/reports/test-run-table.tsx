@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useState } from "react";
 
-interface TestRun {
+export interface TestRun {
   id: number;
   name: string;
   description?: string;
@@ -118,7 +118,7 @@ export function TestRunTable({
                     {formatDateTime(run.started_at)}
                   </TableCell>
                   <TableCell className="text-sm text-neutral-400 dark:text-neutral-500">
-                    {formatDuration(run.duration)}
+                    {formatDuration(run.duration ?? null)}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">

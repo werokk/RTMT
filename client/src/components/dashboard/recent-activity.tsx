@@ -22,7 +22,7 @@ interface ActivityItem {
 
 export function RecentActivity() {
   // Fetch recent activities
-  const { data: activities, isLoading, isError } = useQuery({
+  const { data: activities, isLoading, isError } = useQuery<ActivityItem[]>({
     queryKey: ['/api/stats/recent-activities'],
   });
   

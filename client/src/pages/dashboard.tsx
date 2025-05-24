@@ -28,17 +28,27 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 
+interface TestStatusStat {
+  status: string;
+  count: number;
+}
+
+interface TestRunStat {
+  bugCount?: number; // Assuming bugCount is optional
+  // Add other properties if testRunStats has more
+}
+
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [timeRange, setTimeRange] = useState('month');
   
   // Fetch test status statistics
-  const { data: testStatusStats, isLoading: statsLoading } = useQuery({
+  const { data: testStatusStats, isLoading: statsLoading } = useQuery<TestStatusStat[]>({
     queryKey: ['/api/stats/test-status'],
   });
   
   // Fetch test run statistics
-  const { data: testRunStats, isLoading: runStatsLoading } = useQuery({
+  const { data: testRunStats, isLoading: runStatsLoading } = useQuery<TestRunStat>({
     queryKey: ['/api/stats/test-runs'],
   });
   

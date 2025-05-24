@@ -8,9 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface TestCaseItem {
+  id: number;
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  assigneeName?: string;
+  last_run: string | null;
+}
+
 export function RecentTestCases() {
   // Fetch recent test cases
-  const { data: testCases, isLoading, isError } = useQuery({
+  const { data: testCases, isLoading, isError } = useQuery<TestCaseItem[]>({
     queryKey: ['/api/stats/recent-test-cases'],
   });
   
