@@ -33,7 +33,8 @@ export class SupabaseStorage implements IStorage {
       "Content-Type": "application/json",
       Prefer: "return=representation",
     };
-    this.supabase = supabase;
+    // Initialize the supabase client properly
+    this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   }
 
   // User operations

@@ -29,29 +29,23 @@ export default function TestCaseDetails() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Ensure id exists and is valid
-  const testCaseId = id ? parseInt(id, 10) : null;
+  // Always call hooks at the top level - never conditionally
+  const testCaseId = id ? parseInt(id, 10) : 0;
 
   const { data: testCase, isLoading, error } = useQuery<TestCase>({
     queryKey: ['testCase', testCaseId],
     queryFn: async (): Promise<TestCase> => {
-      if (!testCaseId) {
-        throw new Error('Invalid test case ID');
-      }
       const response = await fetch(`/api/testcases/${testCaseId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch test case');
       }
       return response.json();
     },
-    enabled: Boolean(testCaseId)
+    enabled: Boolean(id && testCaseId > 0)
   });
 
   const updateStepMutation = useMutation<TestCase, Error, TestCase>({
     mutationFn: async (data: TestCase): Promise<TestCase> => {
-      if (!testCaseId) {
-        throw new Error('Invalid test case ID');
-      }
       const response = await fetch(`/api/testcases/${testCaseId}`, {
         method: 'PUT',
         headers: {
@@ -95,8 +89,8 @@ export default function TestCaseDetails() {
     });
   };
 
-  // Handle loading, error, and empty states
-  if (!testCaseId) {
+  // Handle invalid ID case
+  if (!id || testCaseId <= 0) {
     return (
       <div className="p-6">
         <div className="mb-6">
@@ -112,6 +106,7 @@ export default function TestCaseDetails() {
     );
   }
 
+  // Handle loading state
   if (isLoading) {
     return (
       <div className="p-6">
@@ -128,6 +123,7 @@ export default function TestCaseDetails() {
     );
   }
 
+  // Handle error state
   if (error) {
     return (
       <div className="p-6">
@@ -144,6 +140,7 @@ export default function TestCaseDetails() {
     );
   }
 
+  // Handle case where test case is not found
   if (!testCase) {
     return (
       <div className="p-6">
@@ -160,6 +157,7 @@ export default function TestCaseDetails() {
     );
   }
 
+  // Render the main component
   return (
     <div className="p-6">
       <div className="mb-6">
